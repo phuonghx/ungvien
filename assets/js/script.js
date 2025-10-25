@@ -1020,15 +1020,15 @@ function displayTable() {
         }
 
         row.innerHTML = `
-                    <td>${candidate['STT']}</td>
-                    <td><strong>${candidate['Họ tên']}</strong><span class="cccd-text">(${cccd})</span></td>
-                    <td>${candidate['Vị trí dự tuyển']}</td>
-                    <td>${badge}</td>
-                    <td>${candidate['Ngày sinh']}</td>
-                    <td>${candidate['Chuyên ngành đào tạo']}</td>
-                    <td>${candidate['Tên trường NV1']}</td>
-                    <td>${candidate['Tên Trường NV2']}</td>
-                    <td title="${candidate['Ghi chú']}">${candidate['Ghi chú'] ? '✓' : '-'}</td>
+                    <td data-label="STT">${candidate['STT']}</td>
+                    <td data-label="Họ Tên"><strong>${candidate['Họ tên']}</strong><span class="cccd-text">(${cccd})</span></td>
+                    <td data-label="Vị Trí">${candidate['Vị trí dự tuyển']}</td>
+                    <td data-label="Giới Tính">${badge}</td>
+                    <td data-label="Ngày Sinh">${candidate['Ngày sinh']}</td>
+                    <td data-label="Chuyên Ngành">${candidate['Chuyên ngành đào tạo']}</td>
+                    <td data-label="NV1">${candidate['Tên trường NV1']}</td>
+                    <td data-label="NV2">${candidate['Tên Trường NV2']}</td>
+                    <td data-label="Ghi Chú" title="${candidate['Ghi chú']}">${candidate['Ghi chú'] ? '✓' : '-'}</td>
                 `;
     });
 
