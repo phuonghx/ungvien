@@ -1,0 +1,89 @@
+# robots.txt - Disable AI indexing và search engines trên GitHub Pages
+# GitHub Pages tôn trọng robots.txt file
+
+# Disallow tất cả robots
+User-agent: *
+Disallow: /
+
+# Disable AI crawlers cụ thể
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: Cohere-Web
+Disallow: /
+
+User-agent: Grok-1
+Disallow: /
+
+User-agent: AdsBot-Google
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: DataForSeoBot
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+User-agent: Facebookexternalhit
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
+
+User-agent: DuckDuckBot-Ads
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: YouBot
+Disallow: /
+
+User-agent: ImagesiftBot
+Disallow: /
+
+# Disable search engines chính
+User-agent: Googlebot
+Disallow: /
+
+User-agent: Bingbot
+Disallow: /
+
+User-agent: Slurp
+Disallow: /
+
+User-agent: DuckDuckBot
+Disallow: /
+
+User-agent: Baiduspider
+Disallow: /
+
+User-agent: YandexBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+# Crawl-delay
+Crawl-delay: 0

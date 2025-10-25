@@ -1,0 +1,29 @@
+# .htaccess - Kiểm soát HTTP Headers để disable AI indexing
+
+# Disable indexing cho AI crawlers
+<IfModule mod_headers.c>
+    # Prevent AI/ML indexing
+    Header set X-Robots-Tag "noindex, nofollow, noodp, noydir, noarchive, noimageindex"
+    
+    # Disable caching
+    Header set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+    
+    # Prevent scraping
+    Header set X-Content-Type-Options "nosniff"
+</IfModule>
+
+# Disable directory listing
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>
+
+# Rewrite rules
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Block known AI crawlers
+    RewriteCond %{HTTP_USER_AGENT} (GPTBot|ChatGPT|CCBot|anthropic-ai|Claude-Web|Cohere|Grok|Bytespider|DataForSeoBot|Diffbot|PetalBot) [NC]
+    RewriteRule ^ - [F]
+</IfModule>

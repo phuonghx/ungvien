@@ -947,9 +947,17 @@ function drawNoteChart() {
 }
 
 // Tìm kiếm
+// Chuẩn hóa CCCD thành 12 ký tự
+function normalizeCCCD(cccd) {
+    if (!cccd) return '';
+    const cccdStr = cccd.toString().trim();
+    // Bổ sung số 0 ở đầu nếu cần
+    return cccdStr.padStart(12, '0');
+}
+
 function search() {
     currentPage = 1;
-    const searchName = document.getElementById('searchInput').value.toLowerCase();
+    const searchName = document.getElementById('searchInput').value.toLowerCase().trim();
     const selectedPosition = document.getElementById('positionFilter').value;
     const selectedNV1 = document.getElementById('nv1Filter').value;
     const selectedNV2 = document.getElementById('nv2Filter').value;
@@ -959,12 +967,21 @@ function search() {
         // Tìm kiếm theo tên
         const matchName = candidate['Họ tên'].toLowerCase().includes(searchName);
 
-        // Tìm kiếm theo CCCD (với hoặc không có số 0 ở đầu)
+        // Tìm kiếm theo CCCD (hỗ trợ với hoặc không có số 0 ở đầu)
         let matchCCCD = false;
         if (searchName.length > 0) {
-            const cccdOriginal = candidate['Số CCCD'];
-            const cccdWithZero = '0' + cccdOriginal;
-            matchCCCD = cccdOriginal.includes(searchName) || cccdWithZero.includes(searchName);
+            const cccdOriginal = normalizeCCCD(candidate['Số CCCD']);
+            const cccdSearch = normalizeCCCD(searchName);
+            
+            // Tìm kiếm: exact match hoặc tìm kiếm từng ký tự
+            matchCCCD = cccdOriginal.includes(cccdSearch);
+            
+            // Nếu không tìm thấy, thử tìm với phiên bản không có số 0 ở đầu
+            if (!matchCCCD && cccdSearch.startsWith('0')) {
+                const cccdSearchWithoutLeadingZero = cccdSearch.replace(/^0+/, '');
+                const cccdWithoutLeadingZero = cccdOriginal.replace(/^0+/, '');
+                matchCCCD = cccdWithoutLeadingZero.includes(cccdSearchWithoutLeadingZero);
+            }
         }
 
         const matchPosition = !selectedPosition || candidate['Vị trí dự tuyển'] === selectedPosition;
@@ -1005,19 +1022,8 @@ function displayTable() {
             ? `<span class="badge badge-female">Nữ</span>`
             : `<span class="badge badge-male">Nam</span>`;
 
-        // Sửa CCCD theo giới tính
-        let cccd = candidate['Số CCCD'];
-        if (cccd && cccd.length > 0) {
-            const firstDigit = parseInt(cccd[0]);
-            const isGenderValid = candidate['Giới tính'] === 'Nữ'
-                ? firstDigit % 2 === 0
-                : firstDigit % 2 === 1;
-
-            // Nếu giới tính không khớp với quy ước, thêm số 0 ở đầu
-            if (!isGenderValid) {
-                cccd = '0' + cccd;
-            }
-        }
+        // Chuẩn hóa CCCD thành 12 ký tự
+        let cccd = normalizeCCCD(candidate['Số CCCD']);
 
         row.innerHTML = `
                     <td data-label="STT">${candidate['STT']}</td>

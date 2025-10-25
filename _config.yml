@@ -1,0 +1,20 @@
+# GitHub Pages Configuration
+title: Trình Xem Dữ Liệu Ứng Viên
+description: Quản lý, tìm kiếm và phân tích thông tin ứng viên
+
+# Prevent indexing
+include:
+  - .htaccess
+  - robots.txt
+
+# Jekyll settings
+markdown: kramdown
+theme: null
+plugins: []
+
+# Build settings
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
