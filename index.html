@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trình Xem Dữ Liệu Ứng Viên</title>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700&display=swap" />
+
+    <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Trình Xem Dữ Liệu Ứng Viên</h1>
+            <p>Quản lý, tìm kiếm và phân tích thông tin ứng viên</p>
+        </div>
+        
+        <div class="controls">
+            <div class="search-group">
+                <input type="text" id="searchInput" placeholder="🔍 Tìm theo tên hoặc CCCD...">
+                <select id="positionFilter">
+                    <option value="">-- Tất cả vị trí --</option>
+                </select>
+                <select id="nv1Filter">
+                    <option value="">-- Tất cả Nguyện Vọng 1 --</option>
+                </select>
+                <select id="nv2Filter">
+                    <option value="">-- Tất cả Nguyện Vọng 2 --</option>
+                </select>
+                <select id="genderFilter">
+                    <option value="">-- Tất cả giới tính --</option>
+                    <option value="Nam">Nam</option>
+                    <option value="Nữ">Nữ</option>
+                </select>
+                
+            </div>
+            <div class="button-group" style="text-align: center; margin: auto; padding-bottom: 20px;"><button onclick="search()">Tìm kiếm</button></div>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <h3>Tổng Ứng Viên</h3>
+                    <p id="totalCount">0</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Ứng Viên Nam</h3>
+                    <p id="maleCount">0</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Ứng Viên Nữ</h3>
+                    <p id="femaleCount">0</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Kết Quả Tìm Kiếm</h3>
+                    <p id="resultCount">0</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- Navigation Tabs -->
+            <div class="tabs">
+                <button class="tab-button active" onclick="switchTab('table')">📋 Bảng Dữ Liệu</button>
+                <button class="tab-button" onclick="switchTab('dashboard')">📈 Thống kê Cơ Bản</button>
+                <button class="tab-button" onclick="switchTab('advanced')">🎯 Thống kê Nâng Cao</button>
+            </div>
+            
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content">
+                <div class="statistics-section">
+                    <h2>📊 Tỷ Lệ Chọi Theo Môn</h2>
+                    <div class="chart-container">
+                        <div class="chart-wrapper">
+                            <h3>Số Lượng Ứng Viên Theo Vị Trí (Tất Cả Môn)</h3>
+                            <div style="margin-bottom: 10px; text-align: center;">
+                                <button onclick="togglePositionChart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                    🔄 Đảo Ngược Thứ Tự
+                                </button>
+                            </div>
+                            <div class="chart-scroll">
+                                <canvas id="positionChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <h3>Tỷ Lệ Chọi (%)</h3>
+                            <div style="margin-bottom: 10px; text-align: center;">
+                                <button onclick="toggleRatioChart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                    🔄 Đảo Ngược Thứ Tự
+                                </button>
+                            </div>
+                            <div class="chart-scroll">
+                                <canvas id="ratioChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="statistics-section">
+                    <h2>📍 Phân Bổ Nguyện Vọng</h2>
+                    <div class="chart-container">
+                        <div class="chart-wrapper">
+                            <h3>Phân Bổ Nguyện Vọng 1 (Tất Cả Trường)</h3>
+                            <div style="margin-bottom: 10px; text-align: center;">
+                                <button onclick="toggleNV1Chart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                    🔄 Đảo Ngược Thứ Tự
+                                </button>
+                            </div>
+                            <div class="chart-scroll">
+                                <canvas id="nv1Chart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <h3>Phân Bổ Nguyện Vọng 2 (Tất Cả Trường)</h3>
+                            <div style="margin-bottom: 10px; text-align: center;">
+                                <button onclick="toggleNV2Chart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                    🔄 Đảo Ngược Thứ Tự
+                                </button>
+                            </div>
+                            <div class="chart-scroll">
+                                <canvas id="nv2Chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="statistics-section">
+                    <h2>👥 Phân Bổ Giới Tính</h2>
+                    <div class="chart-container">
+                        <div class="chart-wrapper">
+                            <h3>Tỷ Lệ Nam/Nữ</h3>
+                            <canvas id="genderChart"></canvas>
+                        </div>
+                        <div class="chart-wrapper">
+                            <h3>Phân Bổ Nam/Nữ Theo Tất Cả Vị Trí</h3>
+                            <div class="chart-scroll">
+                                <canvas id="genderPositionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Tab -->
+            <div id="advanced" class="tab-content">
+                <div class="statistics-section">
+                    <h2>🎓 Phân Bổ Theo Chuyên Ngành</h2>
+                    <div class="chart-container">
+                        <div class="chart-wrapper">
+                            <h3>Số Lượng Ứng Viên Theo Chuyên Ngành</h3>
+                            <div style="margin-bottom: 10px; text-align: center;">
+                                <button onclick="toggleMajorChart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                    🔄 Đảo Ngược Thứ Tự
+                                </button>
+                            </div>
+                            <div class="chart-scroll">
+                                <canvas id="majorChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <h3>Phân Bổ Nam/Nữ Theo Chuyên Ngành</h3>
+                            <div style="margin-bottom: 10px; text-align: center;">
+                                <button onclick="toggleGenderMajorChart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                    🔄 Đảo Ngược Thứ Tự
+                                </button>
+                            </div>
+                            <div class="chart-scroll">
+                                <canvas id="genderMajorChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="statistics-section">
+                    <h2>📊 So Sánh Nguyện Vọng</h2>
+                    <div class="chart-container">
+                        <div class="chart-wrapper">
+                            <h3>So Sánh NV1 vs NV2 Theo Vị Trí</h3>
+                            <div style="margin-bottom: 10px; text-align: center;">
+                                <button onclick="toggleNV1vs2Chart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                    🔄 Đảo Ngược Thứ Tự
+                                </button>
+                            </div>
+                            <div class="chart-scroll">
+                                <canvas id="nv1vs2Chart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <h3>Top 10 Cặp Vị Trí - Nguyện Vọng 1 Phổ Biến Nhất</h3>
+                            <div style="margin-bottom: 10px; text-align: center;">
+                                <button onclick="toggleTopPairsChart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                    🔄 Đảo Ngược Thứ Tự
+                                </button>
+                            </div>
+                            <div class="chart-scroll">
+                                <canvas id="topPairsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="statistics-section">
+                    <h2>📅 Phân Tích Khác</h2>
+                    <div class="chart-container">
+                        <div class="chart-wrapper">
+                            <h3>Phân Bổ Tuổi Ứng Viên (Theo Năm Sinh)</h3>
+                            <div style="margin-bottom: 10px; text-align: center;">
+                                <button onclick="toggleAgeChart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                    🔄 Đảo Ngược Thứ Tự
+                                </button>
+                            </div>
+                            <div class="chart-scroll">
+                                <canvas id="ageChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <h3>Tỷ Lệ Hoàn Thành Thông Tin (Ghi Chú)</h3>
+                            <canvas id="noteChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Table Tab -->
+            <div id="table" class="tab-content active">
+                <p class="info-text" id="infoText"></p>
+                
+                <div class="table-wrapper">
+                    <table id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Họ Tên</th>
+                                <th>Vị Trí</th>
+                                <th>Giới Tính</th>
+                                <th>Ngày Sinh</th>
+                                <th>Chuyên Ngành</th>
+                                <th>Nguyện Vọng 1</th>
+                                <th>Nguyện Vọng 2</th>
+                                <th>Ghi Chú</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr><td colspan="9" class="no-data">Đang tải dữ liệu...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pagination" id="pagination"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Load dữ liệu -->
+    <script src="/assets/js/data.js"></script>
+    <script src="/assets/js/script.js"></script>
+    
+</body>
+</html>

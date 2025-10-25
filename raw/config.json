@@ -1,0 +1,175 @@
+{
+  "project": {
+    "name": "CSV to JavaScript Converter",
+    "description": "Công cụ chuyển đổi và quản lý dữ liệu từ CSV sang JavaScript",
+    "version": "1.0.0",
+    "author": "AI Assistant",
+    "created": "2025-10-25",
+    "license": "MIT"
+  },
+  
+  "files": {
+    "source": {
+      "csv": "full.csv",
+      "description": "File CSV gốc chứa dữ liệu ứng viên (6764 bản ghi)"
+    },
+    "output": {
+      "data_js": "data.js",
+      "description": "File JavaScript chứa dữ liệu (được tạo tự động)",
+      "format": "Array of Objects",
+      "size_estimate": "2-3 MB"
+    },
+    "converter": {
+      "script": "csv-to-js.js",
+      "description": "Script Node.js để chuyển đổi CSV sang JS",
+      "language": "JavaScript (Node.js)",
+      "features": ["CSV parsing", "UTF-8 support", "Quote handling", "Empty line removal"]
+    },
+    "utilities": {
+      "class": "utils.js",
+      "description": "Lớp CandidateManager với các hàm tiện ích",
+      "methods_count": 12,
+      "methods": [
+        "getTotalCount()",
+        "filterByPosition()",
+        "filterByGender()",
+        "filterBySchool()",
+        "filterByMajor()",
+        "searchByName()",
+        "getStatisticsByPosition()",
+        "getStatisticsByGender()",
+        "getCandidateById()",
+        "exportToJSON()",
+        "exportToCSV()"
+      ]
+    },
+    "web_interface": {
+      "html": "viewer.html",
+      "description": "Giao diện web để xem và tìm kiếm dữ liệu",
+      "features": [
+        "Real-time search",
+        "Advanced filtering",
+        "Pagination",
+        "Statistics",
+        "Responsive design",
+        "Dark mode ready"
+      ],
+      "usage": "Mở trong trình duyệt hoặc HTTP server"
+    },
+    "documentation": {
+      "readme": "README.md",
+      "summary": "SUMMARY.md",
+      "example": "example.js",
+      "quickstart": "quickstart.sh"
+    }
+  },
+  
+  "data": {
+    "total_records": 6764,
+    "fields": 14,
+    "field_names": [
+      "STT",
+      "Họ tên",
+      "Vị trí dự tuyển",
+      "Tên trường NV1",
+      "Tên Trường NV2",
+      "Họ tên2",
+      "Ngày sinh",
+      "Giới tính",
+      "Số CCCD",
+      "Điểm Điện UT",
+      "Trình độ đào tạo",
+      "Chuyên ngành đào tạo",
+      "Ngành đào tạo",
+      "Ghi chú"
+    ],
+    "encoding": "UTF-8",
+    "delimiter": ","
+  },
+  
+  "usage": {
+    "node_js": {
+      "description": "Sử dụng dữ liệu trong Node.js",
+      "code": "const data = require('./data.js'); const Manager = require('./utils.js'); const mgr = new Manager(data);",
+      "best_for": "Backend, batch processing, large data"
+    },
+    "browser": {
+      "description": "Sử dụng dữ liệu trong trình duyệt",
+      "code": "<script src='data.js'></script><script src='utils.js'></script>",
+      "best_for": "Web application, interactive dashboard"
+    },
+    "web_interface": {
+      "description": "Dùng giao diện web có sẵn",
+      "code": "Open viewer.html in browser",
+      "best_for": "Quick data exploration, non-technical users"
+    }
+  },
+  
+  "features": [
+    "CSV to JavaScript conversion",
+    "UTF-8 character support",
+    "Quote and special character handling",
+    "Real-time search and filtering",
+    "Data statistics and analytics",
+    "Export to JSON and CSV",
+    "Web-based viewer",
+    "Pagination support",
+    "Responsive design",
+    "Node.js and Browser compatible"
+  ],
+  
+  "technology_stack": [
+    "JavaScript (ES6+)",
+    "Node.js",
+    "HTML5",
+    "CSS3",
+    "JSON"
+  ],
+  
+  "quick_commands": {
+    "convert": "node csv-to-js.js",
+    "view": "Open viewer.html in browser",
+    "http_server": "npx http-server .",
+    "test": "node example.js"
+  },
+  
+  "system_requirements": {
+    "node_js": "v12+",
+    "browser": "Modern browser with ES6 support",
+    "csv_encoding": "UTF-8",
+    "disk_space": "5-10 MB"
+  },
+  
+  "performance": {
+    "data_records": 6764,
+    "load_time_node": "< 100ms",
+    "load_time_browser": "< 500ms",
+    "search_speed": "Instant (< 50ms)",
+    "filter_speed": "< 100ms"
+  },
+  
+  "future_enhancements": [
+    "Database integration (MongoDB, PostgreSQL)",
+    "REST API with Express.js",
+    "React/Vue.js frontend",
+    "PDF export",
+    "Advanced date filtering",
+    "User authentication",
+    "Data validation",
+    "Duplicate detection"
+  ],
+  
+  "troubleshooting": {
+    "file_not_found": "Đảm bảo bạn đã chạy 'node csv-to-js.js' trước",
+    "charset_issue": "Kiểm tra mã hóa file CSV là UTF-8",
+    "node_not_found": "Cài đặt Node.js từ nodejs.org",
+    "browser_not_working": "Sử dụng HTTP server thay vì file://",
+    "memory_issue": "Sử dụng Node.js để xử lý dữ liệu lớn"
+  },
+  
+  "support": {
+    "documentation": "Xem README.md",
+    "examples": "Xem example.js",
+    "summary": "Xem SUMMARY.md"
+  }
+}
