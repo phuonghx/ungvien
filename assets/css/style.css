@@ -307,6 +307,11 @@ tr:hover {
   border-bottom: 2px solid #667eea;
 }
 
+.name-cccd {
+  display: flex;
+  flex-direction: column;
+}
+
 @media (max-width: 499px) {
   .search-group {
     grid-template-columns: 1fr;

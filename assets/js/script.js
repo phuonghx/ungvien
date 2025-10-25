@@ -1027,7 +1027,7 @@ function displayTable() {
 
         row.innerHTML = `
                     <td data-label="STT">${candidate['STT']}</td>
-                    <td data-label="Họ Tên"><strong>${candidate['Họ tên']}</strong><span class="cccd-text">(${cccd})</span></td>
+                    <td data-label="Họ Tên"><div class="name-cccd"><strong>${candidate['Họ tên']}</strong><span class="cccd-text">(${cccd})</span></div></td>
                     <td data-label="Vị Trí">${candidate['Vị trí dự tuyển']}</td>
                     <td data-label="Giới Tính">${badge}</td>
                     <td data-label="Ngày Sinh">${candidate['Ngày sinh']}</td>
