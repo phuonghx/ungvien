@@ -1048,7 +1048,7 @@ function displayPagination(totalPages) {
     if (totalPages <= 1) return;
 
     const prevBtn = document.createElement('button');
-    prevBtn.textContent = '← Trang Trước';
+    prevBtn.textContent = '← Trước';
     prevBtn.disabled = currentPage === 1;
     prevBtn.onclick = () => {
         if (currentPage > 1) {
@@ -1061,11 +1061,11 @@ function displayPagination(totalPages) {
 
     const pageInfo = document.createElement('span');
     pageInfo.style.margin = '0 20px';
-    pageInfo.textContent = `Trang ${currentPage} / ${totalPages}`;
+    pageInfo.textContent = `${currentPage} / ${totalPages}`;
     paginationDiv.appendChild(pageInfo);
 
     const nextBtn = document.createElement('button');
-    nextBtn.textContent = 'Trang Sau →';
+    nextBtn.textContent = 'Sau →';
     nextBtn.disabled = currentPage === totalPages;
     nextBtn.onclick = () => {
         if (currentPage < totalPages) {
