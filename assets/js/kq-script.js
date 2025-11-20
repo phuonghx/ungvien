@@ -10,12 +10,128 @@ function init() {
         console.log(`Đã tải ${allResults.length} kết quả thi`);
     }
     
+    const searchInput = document.getElementById('searchInput');
+    
     // Lắng nghe sự kiện Enter
-    document.getElementById('searchInput').addEventListener('keypress', function (e) {
+    searchInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             searchCandidate();
         }
     });
+    
+    // Lắng nghe sự kiện nhập liệu để hiển thị gợi ý
+    searchInput.addEventListener('input', function (e) {
+        showAutocomplete(e.target.value);
+    });
+    
+    // Ẩn dropdown khi click ra ngoài
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('.search-input-wrapper')) {
+            hideAutocomplete();
+        }
+    });
+}
+
+// Chuyển đổi chuỗi có dấu thành không dấu
+function removeVietnameseTones(str) {
+    if (!str) return '';
+    str = str.toLowerCase();
+    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, 'a');
+    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, 'e');
+    str = str.replace(/ì|í|ị|ỉ|ĩ/g, 'i');
+    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, 'o');
+    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, 'u');
+    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, 'y');
+    str = str.replace(/đ/g, 'd');
+    return str;
+}
+
+// Chuẩn hóa chuỗi tìm kiếm (loại bỏ khoảng trắng và dấu)
+function normalizeSearchString(str) {
+    if (!str) return '';
+    // Loại bỏ khoảng trắng và chuyển thành không dấu
+    return removeVietnameseTones(str.replace(/\s+/g, ''));
+}
+
+// Hiển thị gợi ý tự động
+function showAutocomplete(searchValue) {
+    const dropdown = document.getElementById('autocompleteDropdown');
+    
+    if (!searchValue || searchValue.length < 2) {
+        dropdown.style.display = 'none';
+        return;
+    }
+    
+    const searchNormalized = normalizeSearchString(searchValue);
+    const searchLower = searchValue.toLowerCase();
+    
+    // Tìm kiếm theo SBD hoặc tên (hỗ trợ không dấu và viết liền)
+    const matches = allResults.filter(c => {
+        const sbd = c.SBD.toUpperCase();
+        const name = c['Họ tên'].toLowerCase();
+        const nameNormalized = normalizeSearchString(name);
+        const nameWithoutSpace = removeVietnameseTones(name.replace(/\s+/g, ''));
+        
+        // Tìm theo SBD
+        if (sbd.includes(searchValue.toUpperCase())) {
+            return true;
+        }
+        
+        // Tìm theo tên có dấu
+        if (name.includes(searchLower)) {
+            return true;
+        }
+        
+        // Tìm theo tên không dấu
+        if (nameNormalized.includes(searchNormalized)) {
+            return true;
+        }
+        
+        // Tìm theo tên viết liền
+        if (nameWithoutSpace.includes(removeVietnameseTones(searchLower))) {
+            return true;
+        }
+        
+        return false;
+    }).slice(0, 20); // Giới hạn 10 kết quả
+    
+    if (matches.length === 0) {
+        dropdown.style.display = 'none';
+        return;
+    }
+    
+    dropdown.innerHTML = '';
+    matches.forEach(c => {
+        const item = document.createElement('div');
+        item.className = 'autocomplete-item';
+        item.innerHTML = `
+            <div class="autocomplete-sbd">${c.SBD}</div>
+            <div class="autocomplete-info">
+                <span class="autocomplete-name">${c['Họ tên']}</span>
+                <span class="autocomplete-detail">${c['Vị trí dự tuyển']} • ${c['Giới tính']} • ${c['Ngày sinh']}</span>
+            </div>
+        `;
+        item.onclick = () => {
+            selectCandidate(c);
+        };
+        dropdown.appendChild(item);
+    });
+    
+    dropdown.style.display = 'block';
+}
+
+// Ẩn dropdown gợi ý
+function hideAutocomplete() {
+    const dropdown = document.getElementById('autocompleteDropdown');
+    dropdown.style.display = 'none';
+}
+
+// Chọn thí sinh từ gợi ý
+function selectCandidate(candidate) {
+    hideAutocomplete();
+    document.getElementById('searchInput').value = candidate.SBD;
+    currentCandidate = candidate;
+    displayResult(candidate);
 }
 
 // Tìm kiếm thí sinh
@@ -27,6 +143,8 @@ function searchCandidate() {
         return;
     }
     
+    hideAutocomplete();
+    
     // Ẩn tất cả các section
     document.getElementById('resultSection').style.display = 'none';
     document.getElementById('notFoundSection').style.display = 'none';
@@ -37,11 +155,17 @@ function searchCandidate() {
         c.SBD.toUpperCase() === searchValue.toUpperCase()
     );
     
-    // Nếu không tìm thấy theo SBD, tìm theo tên
+    // Nếu không tìm thấy theo SBD, tìm theo tên (hỗ trợ không dấu)
     if (!candidate) {
-        const candidates = allResults.filter(c => 
-            c['Họ tên'].toLowerCase().includes(searchValue.toLowerCase())
-        );
+        const searchNormalized = normalizeSearchString(searchValue);
+        const searchLower = searchValue.toLowerCase();
+        
+        const candidates = allResults.filter(c => {
+            const name = c['Họ tên'].toLowerCase();
+            const nameNormalized = normalizeSearchString(name);
+            
+            return name.includes(searchLower) || nameNormalized.includes(searchNormalized);
+        });
         
         if (candidates.length === 1) {
             candidate = candidates[0];
