@@ -162,6 +162,10 @@ function displayResult(candidate) {
         drawCharts(candidate);
     }, 100);
     
+    // Hiển thị danh sách thí sinh cùng nguyện vọng
+    displayNV1Competitors(candidate);
+    displayNV2Competitors(candidate);
+    
     // Cuộn đến kết quả
     document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
@@ -334,6 +338,188 @@ function drawCharts(candidate) {
         } else {
             ctx2.parentElement.innerHTML = '<p style="text-align: center; padding: 20px; color: #95a5a6;">Không có dữ liệu thứ hạng</p>';
         }
+    }
+}
+
+// Hiển thị danh sách thí sinh cùng NV1
+function displayNV1Competitors(candidate) {
+    const nv1 = candidate['Tên trường NV1'];
+    const position = candidate['Vị trí dự tuyển'];
+    
+    if (!nv1 || !nv1.trim()) {
+        document.getElementById('nv1CompetitorSection').style.display = 'none';
+        return;
+    }
+    
+    document.getElementById('nv1CompetitorSection').style.display = 'block';
+    
+    // Lọc thí sinh cùng vị trí và cùng NV1
+    const competitors = allResults.filter(c => {
+        const samePosition = c['Vị trí dự tuyển'] === position;
+        const sameSchool = c['Tên trường NV1'] === nv1;
+        const hasScore = c['Tổng điểm'] && c['Tổng điểm'] !== 'Bỏ thi' && c['Tổng điểm'].trim() !== '';
+        return samePosition && sameSchool && hasScore;
+    });
+    
+    // Sắp xếp theo điểm giảm dần
+    competitors.sort((a, b) => {
+        const scoreA = parseFloat(a['Tổng điểm']);
+        const scoreB = parseFloat(b['Tổng điểm']);
+        return scoreB - scoreA;
+    });
+    
+    document.getElementById('nv1ListCount').textContent = competitors.length;
+    
+    const listContainer = document.getElementById('nv1CompetitorList');
+    listContainer.innerHTML = '';
+    
+    // Tạo bảng
+    const table = document.createElement('table');
+    table.className = 'competitor-table';
+    table.innerHTML = `
+        <thead>
+            <tr>
+                <th>Thứ hạng</th>
+                <th>SBD</th>
+                <th>Họ tên</th>
+                <th>Giới tính</th>
+                <th>Ngày sinh</th>
+                <th>Điểm UT</th>
+                <th>Điểm thi</th>
+                <th>Tổng điểm</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    `;
+    
+    const tbody = table.querySelector('tbody');
+    
+    competitors.forEach((c, index) => {
+        const row = document.createElement('tr');
+        const isCurrentCandidate = c.SBD === candidate.SBD;
+        if (isCurrentCandidate) {
+            row.className = 'current-candidate';
+        }
+        
+        row.innerHTML = `
+            <td class="rank-cell">${index + 1}</td>
+            <td>${c.SBD}</td>
+            <td>${c['Họ tên']}</td>
+            <td>${c['Giới tính']}</td>
+            <td>${c['Ngày sinh']}</td>
+            <td>${c['Điểm Diện UT'] || '0'}</td>
+            <td>${c['Điểm bài thi viết'] || '-'}</td>
+            <td class="score-cell">${c['Tổng điểm']}</td>
+        `;
+        
+        tbody.appendChild(row);
+    });
+    
+    listContainer.appendChild(table);
+}
+
+// Hiển thị danh sách thí sinh cùng NV2
+function displayNV2Competitors(candidate) {
+    const nv2 = candidate['Tên Trường NV2'];
+    const position = candidate['Vị trí dự tuyển'];
+    
+    if (!nv2 || !nv2.trim()) {
+        document.getElementById('nv2CompetitorSection').style.display = 'none';
+        return;
+    }
+    
+    document.getElementById('nv2CompetitorSection').style.display = 'block';
+    
+    // Lọc thí sinh cùng vị trí và cùng NV2
+    const competitors = allResults.filter(c => {
+        const samePosition = c['Vị trí dự tuyển'] === position;
+        const sameSchool = c['Tên Trường NV2'] === nv2;
+        const hasScore = c['Tổng điểm'] && c['Tổng điểm'] !== 'Bỏ thi' && c['Tổng điểm'].trim() !== '';
+        return samePosition && sameSchool && hasScore;
+    });
+    
+    // Sắp xếp theo điểm giảm dần
+    competitors.sort((a, b) => {
+        const scoreA = parseFloat(a['Tổng điểm']);
+        const scoreB = parseFloat(b['Tổng điểm']);
+        return scoreB - scoreA;
+    });
+    
+    document.getElementById('nv2ListCount').textContent = competitors.length;
+    
+    const listContainer = document.getElementById('nv2CompetitorList');
+    listContainer.innerHTML = '';
+    
+    // Tạo bảng
+    const table = document.createElement('table');
+    table.className = 'competitor-table';
+    table.innerHTML = `
+        <thead>
+            <tr>
+                <th>Thứ hạng</th>
+                <th>SBD</th>
+                <th>Họ tên</th>
+                <th>Giới tính</th>
+                <th>Ngày sinh</th>
+                <th>Điểm UT</th>
+                <th>Điểm thi</th>
+                <th>Tổng điểm</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    `;
+    
+    const tbody = table.querySelector('tbody');
+    
+    competitors.forEach((c, index) => {
+        const row = document.createElement('tr');
+        const isCurrentCandidate = c.SBD === candidate.SBD;
+        if (isCurrentCandidate) {
+            row.className = 'current-candidate';
+        }
+        
+        row.innerHTML = `
+            <td class="rank-cell">${index + 1}</td>
+            <td>${c.SBD}</td>
+            <td>${c['Họ tên']}</td>
+            <td>${c['Giới tính']}</td>
+            <td>${c['Ngày sinh']}</td>
+            <td>${c['Điểm Diện UT'] || '0'}</td>
+            <td>${c['Điểm bài thi viết'] || '-'}</td>
+            <td class="score-cell">${c['Tổng điểm']}</td>
+        `;
+        
+        tbody.appendChild(row);
+    });
+    
+    listContainer.appendChild(table);
+}
+
+// Toggle hiển thị danh sách NV1
+function toggleNV1List() {
+    const list = document.getElementById('nv1CompetitorList');
+    const btn = document.getElementById('toggleNV1Btn');
+    
+    if (list.style.display === 'none') {
+        list.style.display = 'block';
+        btn.textContent = btn.textContent.replace('Xem', 'Ẩn');
+    } else {
+        list.style.display = 'none';
+        btn.textContent = btn.textContent.replace('Ẩn', 'Xem');
+    }
+}
+
+// Toggle hiển thị danh sách NV2
+function toggleNV2List() {
+    const list = document.getElementById('nv2CompetitorList');
+    const btn = document.getElementById('toggleNV2Btn');
+    
+    if (list.style.display === 'none') {
+        list.style.display = 'block';
+        btn.textContent = btn.textContent.replace('Xem', 'Ẩn');
+    } else {
+        list.style.display = 'none';
+        btn.textContent = btn.textContent.replace('Ẩn', 'Xem');
     }
 }
 

@@ -469,6 +469,106 @@ body {
     }
 }
 
+/* Competitor section */
+.competitor-section {
+    margin-bottom: 20px;
+}
+
+.competitor-controls {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.btn-toggle {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.competitor-list {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    overflow-x: auto;
+}
+
+.competitor-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.competitor-table thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.competitor-table th {
+    padding: 12px 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.competitor-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 14px;
+}
+
+.competitor-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.competitor-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.competitor-table .current-candidate {
+    background: #fff3cd !important;
+    font-weight: 600;
+}
+
+.competitor-table .current-candidate td {
+    border-top: 2px solid #ffc107;
+    border-bottom: 2px solid #ffc107;
+}
+
+.competitor-table .current-candidate:first-child td:first-child {
+    border-left: 2px solid #ffc107;
+}
+
+.competitor-table .current-candidate:last-child td:last-child {
+    border-right: 2px solid #ffc107;
+}
+
+.rank-cell {
+    font-weight: 600;
+    color: #667eea;
+    text-align: center !important;
+}
+
+.score-cell {
+    font-weight: 600;
+    color: #2ecc71;
+    text-align: center !important;
+}
+
 /* Print styles */
 @media print {
     body {
@@ -477,11 +577,16 @@ body {
     }
     
     .search-section,
-    .action-buttons {
+    .action-buttons,
+    .competitor-controls {
         display: none;
     }
     
     .result-section {
         box-shadow: none;
+    }
+    
+    .competitor-list {
+        display: block !important;
     }
 }
