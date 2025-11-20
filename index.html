@@ -5,277 +5,165 @@
     <link rel="icon" href="/assets/images/logo.png" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow, noodp, noydir, noarchive, noimageindex">
-    <meta name="AdsBot-Google" content="noindex, nofollow">
-    <meta name="Googlebot" content="noindex, nofollow">
-    <meta name="Bingbot" content="noindex, nofollow">
-    <meta name="Slurp" content="noindex, nofollow">
-    <meta name="DuckDuckBot" content="noindex, nofollow">
-    <meta name="Baiduspider" content="noindex, nofollow">
-    <meta name="YandexBot" content="noindex, nofollow">
-    <!-- Disable AI/ML indexing -->
-    <meta name="GPTBot" content="noindex, nofollow">
-    <meta name="ChatGPT-User" content="noindex, nofollow">
-    <meta name="CCBot" content="noindex, nofollow">
-    <meta name="anthropic-ai" content="noindex, nofollow">
-    <meta name="Claude-Web" content="noindex, nofollow">
-    <meta name="Cohere" content="noindex, nofollow">
-    <meta name="Grok" content="noindex, nofollow">
-    <meta name="Bytespider" content="noindex, nofollow">
-    <meta name="DataForSeoBot" content="noindex, nofollow">
-    <meta name="Diffbot" content="noindex, nofollow">
-    <meta name="PetalBot" content="noindex, nofollow">
-    <meta name="DuckDuckBot-Ads" content="noindex, nofollow">
-    <title>Trình Xem Dữ Liệu Ứng Viên</title>
-    <!-- Chart.js -->
+    <title>Tra Cứu Kết Quả Thi Tuyển</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700&display=swap" />
-
-    <link rel="stylesheet" href="/assets/css/style.min.css" />
+    <link rel="stylesheet" href="/assets/css/kq-style.css" />
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>📊 Dữ Liệu Ứng Viên</h1>
-            <p style="font-size: 14px;">Quản lý, tìm kiếm và phân tích thông tin ứng viên</p>
-        </div>
-        
-        <div class="controls">
-            <div class="search-group">
-                <input type="text" id="searchInput" placeholder="🔍 Tìm theo tên hoặc CCCD...">
-                <select id="positionFilter">
-                    <option value="">-- Tất cả vị trí --</option>
-                </select>
-                <select id="nv1Filter">
-                    <option value="">-- Tất cả Nguyện Vọng 1 --</option>
-                </select>
-                <select id="nv2Filter">
-                    <option value="">-- Tất cả Nguyện Vọng 2 --</option>
-                </select>
-                <select id="genderFilter">
-                    <option value="">-- Tất cả giới tính --</option>
-                    <option value="Nam">Nam</option>
-                    <option value="Nữ">Nữ</option>
-                </select>
-                
-            </div>
-            <div class="button-group" style="text-align: center; margin: auto; padding-bottom: 20px;"><button onclick="search()">Tìm kiếm</button></div>
-            
-            <div class="stats">
-                <div class="stat-box">
-                    <h3>Tổng Ứng Viên</h3>
-                    <p id="totalCount">0</p>
-                </div>
-                <div class="stat-box">
-                    <h3>Ứng Viên Nam</h3>
-                    <p id="maleCount">0</p>
-                </div>
-                <div class="stat-box">
-                    <h3>Ứng Viên Nữ</h3>
-                    <p id="femaleCount">0</p>
-                </div>
-                <div class="stat-box">
-                    <h3>Kết Quả Tìm Kiếm</h3>
-                    <p id="resultCount">0</p>
-                </div>
+            <h1>🎓 Tra Cứu Kết Quả Thi Tuyển</h1>
+            <p style="font-size: 14px;">Tra cứu điểm thi, kết quả và tỷ lệ chọi theo thí sinh</p>
+            <div style="margin-top: 15px;">
+                <a href="/ungvien.html" style="display: inline-block; padding: 10px 25px; background: white; color: #667eea; text-decoration: none; border-radius: 8px; font-weight: 600; border: 2px solid #667eea; transition: all 0.3s;">
+                    ← Quay lại Danh sách Ứng viên
+                </a>
             </div>
         </div>
-        
-        <div class="content">
-            <!-- Navigation Tabs -->
-            <div class="tabs">
-                <button class="tab-button active" onclick="switchTab('table')">📋 Dữ Liệu</button>
-                <button class="tab-button" onclick="switchTab('dashboard')">📈 Thống kê</button>
-                <button class="tab-button" onclick="switchTab('advanced')">🎯 Nâng Cao</button>
+
+        <!-- Form tìm kiếm -->
+        <div class="search-section">
+            <h2>🔍 Tìm Kiếm Thí Sinh</h2>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Nhập SBD (vd: C12617) hoặc Họ tên thí sinh..." autocomplete="off">
+                <button onclick="searchCandidate()">Tra cứu</button>
             </div>
-            
-            <!-- Dashboard Tab -->
-            <div id="dashboard" class="tab-content">
-                <div class="statistics-section">
-                    <h2>📊 Tỷ Lệ Chọi Theo Môn</h2>
-                    <div class="chart-container">
-                        <div class="chart-wrapper">
-                            <h3>Số Lượng Ứng Viên Theo Vị Trí (Tất Cả Môn)</h3>
-                            <div style="margin-bottom: 10px; text-align: center;">
-                                <button onclick="togglePositionChart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
-                                    🔄 Đảo Ngược Thứ Tự
-                                </button>
-                            </div>
-                            <div class="chart-scroll">
-                                <canvas id="positionChart"></canvas>
-                            </div>
+            <p class="hint">💡 Mẹo: Nhập SBD đầy đủ hoặc tên để tìm kiếm chính xác hơn</p>
+        </div>
+
+        <!-- Kết quả tìm kiếm -->
+        <div id="resultSection" class="result-section" style="display: none;">
+            <h2>📋 Thông Tin Thí Sinh</h2>
+            <div class="candidate-info">
+                <div class="info-row">
+                    <div class="info-item">
+                        <span class="label">Số báo danh:</span>
+                        <span class="value" id="sbd"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Phòng thi:</span>
+                        <span class="value" id="room"></span>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-item">
+                        <span class="label">Họ tên:</span>
+                        <span class="value" id="name"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Ngày sinh:</span>
+                        <span class="value" id="dob"></span>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-item">
+                        <span class="label">Giới tính:</span>
+                        <span class="value" id="gender"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Vị trí dự tuyển:</span>
+                        <span class="value" id="position"></span>
+                    </div>
+                </div>
+            </div>
+
+            <h2>📊 Điểm Thi</h2>
+            <div class="score-section">
+                <div class="score-card">
+                    <div class="score-label">Điểm Ưu Tiên</div>
+                    <div class="score-value" id="bonusScore">-</div>
+                </div>
+                <div class="score-card">
+                    <div class="score-label">Điểm Bài Thi Viết</div>
+                    <div class="score-value" id="testScore">-</div>
+                </div>
+                <div class="score-card highlight">
+                    <div class="score-label">Tổng Điểm</div>
+                    <div class="score-value" id="totalScore">-</div>
+                </div>
+            </div>
+
+            <h2>🎯 Nguyện Vọng & Tỷ Lệ Chọi</h2>
+            <div class="wish-section">
+                <div class="wish-card">
+                    <h3>Nguyện Vọng 1</h3>
+                    <div class="school-name" id="nv1"></div>
+                    <div class="competition-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Số thí sinh cùng NV1:</span>
+                            <span class="stat-value" id="nv1Count">-</span>
                         </div>
-                        <div class="chart-wrapper">
-                            <h3>Tỷ Lệ Chọi (%)</h3>
-                            <div style="margin-bottom: 10px; text-align: center;">
-                                <button onclick="toggleRatioChart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
-                                    🔄 Đảo Ngược Thứ Tự
-                                </button>
-                            </div>
-                            <div class="chart-scroll">
-                                <canvas id="ratioChart"></canvas>
-                            </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Tỷ lệ chọi:</span>
+                            <span class="stat-value competitive" id="nv1Ratio">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Thứ hạng của bạn:</span>
+                            <span class="stat-value rank" id="nv1Rank">-</span>
                         </div>
                     </div>
                 </div>
-                
-                <div class="statistics-section">
-                    <h2>📍 Phân Bổ Nguyện Vọng</h2>
-                    <div class="chart-container">
-                        <div class="chart-wrapper">
-                            <h3>Phân Bổ Nguyện Vọng 1 (Tất Cả Trường)</h3>
-                            <div style="margin-bottom: 10px; text-align: center;">
-                                <button onclick="toggleNV1Chart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
-                                    🔄 Đảo Ngược Thứ Tự
-                                </button>
-                            </div>
-                            <div class="chart-scroll">
-                                <canvas id="nv1Chart"></canvas>
-                            </div>
+                <div class="wish-card">
+                    <h3>Nguyện Vọng 2</h3>
+                    <div class="school-name" id="nv2"></div>
+                    <div class="competition-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Số thí sinh cùng NV2:</span>
+                            <span class="stat-value" id="nv2Count">-</span>
                         </div>
-                        <div class="chart-wrapper">
-                            <h3>Phân Bổ Nguyện Vọng 2 (Tất Cả Trường)</h3>
-                            <div style="margin-bottom: 10px; text-align: center;">
-                                <button onclick="toggleNV2Chart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
-                                    🔄 Đảo Ngược Thứ Tự
-                                </button>
-                            </div>
-                            <div class="chart-scroll">
-                                <canvas id="nv2Chart"></canvas>
-                            </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Tỷ lệ chọi:</span>
+                            <span class="stat-value competitive" id="nv2Ratio">-</span>
                         </div>
-                    </div>
-                </div>
-                
-                <div class="statistics-section">
-                    <h2>👥 Phân Bổ Giới Tính</h2>
-                    <div class="chart-container">
-                        <div class="chart-wrapper">
-                            <h3>Tỷ Lệ Nam/Nữ</h3>
-                            <canvas id="genderChart"></canvas>
-                        </div>
-                        <div class="chart-wrapper">
-                            <h3>Phân Bổ Nam/Nữ Theo Tất Cả Vị Trí</h3>
-                            <div class="chart-scroll">
-                                <canvas id="genderPositionChart"></canvas>
-                            </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Thứ hạng của bạn:</span>
+                            <span class="stat-value rank" id="nv2Rank">-</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Advanced Tab -->
-            <div id="advanced" class="tab-content">
-                <div class="statistics-section">
-                    <h2>🎓 Phân Bổ Theo Chuyên Ngành</h2>
-                    <div class="chart-container">
-                        <div class="chart-wrapper">
-                            <h3>Số Lượng Ứng Viên Theo Chuyên Ngành</h3>
-                            <div style="margin-bottom: 10px; text-align: center;">
-                                <button onclick="toggleMajorChart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
-                                    🔄 Đảo Ngược Thứ Tự
-                                </button>
-                            </div>
-                            <div class="chart-scroll">
-                                <canvas id="majorChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="chart-wrapper">
-                            <h3>Phân Bổ Nam/Nữ Theo Chuyên Ngành</h3>
-                            <div style="margin-bottom: 10px; text-align: center;">
-                                <button onclick="toggleGenderMajorChart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
-                                    🔄 Đảo Ngược Thứ Tự
-                                </button>
-                            </div>
-                            <div class="chart-scroll">
-                                <canvas id="genderMajorChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
+            <h2>📈 Phân Tích Điểm Số</h2>
+            <div class="chart-container">
+                <div class="chart-wrapper">
+                    <h3>Phân bố điểm theo vị trí dự tuyển</h3>
+                    <canvas id="scoreDistChart"></canvas>
+                    <div class="your-position" id="yourPositionText"></div>
                 </div>
-
-                <div class="statistics-section">
-                    <h2>📊 So Sánh Nguyện Vọng</h2>
-                    <div class="chart-container">
-                        <div class="chart-wrapper">
-                            <h3>So Sánh NV1 vs NV2 Theo Vị Trí</h3>
-                            <div style="margin-bottom: 10px; text-align: center;">
-                                <button onclick="toggleNV1vs2Chart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
-                                    🔄 Đảo Ngược Thứ Tự
-                                </button>
-                            </div>
-                            <div class="chart-scroll">
-                                <canvas id="nv1vs2Chart"></canvas>
-                            </div>
-                        </div>
-                        <div class="chart-wrapper">
-                            <h3>Top 10 Cặp Vị Trí - Nguyện Vọng 1 Phổ Biến Nhất</h3>
-                            <div style="margin-bottom: 10px; text-align: center;">
-                                <button onclick="toggleTopPairsChart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
-                                    🔄 Đảo Ngược Thứ Tự
-                                </button>
-                            </div>
-                            <div class="chart-scroll">
-                                <canvas id="topPairsChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="statistics-section">
-                    <h2>📅 Phân Tích Khác</h2>
-                    <div class="chart-container">
-                        <div class="chart-wrapper">
-                            <h3>Phân Bổ Tuổi Ứng Viên (Theo Năm Sinh)</h3>
-                            <div style="margin-bottom: 10px; text-align: center;">
-                                <button onclick="toggleAgeChart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
-                                    🔄 Đảo Ngược Thứ Tự
-                                </button>
-                            </div>
-                            <div class="chart-scroll">
-                                <canvas id="ageChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="chart-wrapper">
-                            <h3>Tỷ Lệ Hoàn Thành Thông Tin (Ghi Chú)</h3>
-                            <canvas id="noteChart"></canvas>
-                        </div>
-                    </div>
+                <div class="chart-wrapper">
+                    <h3>Thứ hạng của bạn trong NV1</h3>
+                    <canvas id="rankChart"></canvas>
                 </div>
             </div>
-            
-            <!-- Table Tab -->
-            <div id="table" class="tab-content active">
-                <p class="info-text" id="infoText"></p>
-                
-                <div class="table-wrapper">
-                    <table id="resultsTable">
-                        <thead>
-                            <tr>
-                                <th>STT</th>
-                                <th>Họ Tên</th>
-                                <th>Vị Trí</th>
-                                <th>Giới Tính</th>
-                                <th>Ngày Sinh</th>
-                                <th>Chuyên Ngành</th>
-                                <th>Nguyện Vọng 1</th>
-                                <th>Nguyện Vọng 2</th>
-                                <th>Ghi Chú</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableBody">
-                            <tr><td colspan="9" class="no-data">Đang tải dữ liệu...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div class="pagination" id="pagination"></div>
+
+            <div class="note-section" id="noteSection" style="display: none;">
+                <h3>📝 Ghi Chú</h3>
+                <div class="note-content" id="note"></div>
             </div>
+
+            <div class="action-buttons">
+                <button onclick="printResult()" class="btn-primary">🖨️ In Kết Quả</button>
+                <button onclick="searchAgain()" class="btn-secondary">🔄 Tra Cứu Khác</button>
+            </div>
+        </div>
+
+        <!-- Thông báo không tìm thấy -->
+        <div id="notFoundSection" class="not-found-section" style="display: none;">
+            <div class="not-found-icon">❌</div>
+            <h2>Không Tìm Thấy Kết Quả</h2>
+            <p>Vui lòng kiểm tra lại SBD hoặc tên thí sinh và thử lại.</p>
+            <button onclick="searchAgain()" class="btn-secondary">🔄 Thử Lại</button>
+        </div>
+
+        <!-- Danh sách gợi ý -->
+        <div id="suggestionSection" class="suggestion-section" style="display: none;">
+            <h3>💡 Có thể bạn đang tìm:</h3>
+            <div id="suggestionList" class="suggestion-list"></div>
         </div>
     </div>
-    
-    <!-- Load dữ liệu -->
-    <script src="/assets/js/data.min.js"></script>
-    <script src="/assets/js/script.min.js"></script>
-    
+
+    <script src="/assets/js/kq-data.js"></script>
+    <script src="/assets/js/kq-script.js"></script>
 </body>
 </html>
