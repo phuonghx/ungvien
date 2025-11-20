@@ -30,6 +30,43 @@ function init() {
             hideAutocomplete();
         }
     });
+    
+    // Kiểm tra URL có SBD không và tự động tìm kiếm
+    checkURLParams();
+    
+    // Lắng nghe sự kiện thay đổi URL (khi người dùng nhấn nút back/forward)
+    window.addEventListener('popstate', function(e) {
+        checkURLParams();
+    });
+}
+
+// Kiểm tra và load kết quả từ URL
+function checkURLParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const sbd = urlParams.get('sbd');
+    
+    if (sbd) {
+        const candidate = allResults.find(c => 
+            c.SBD.toUpperCase() === sbd.toUpperCase()
+        );
+        
+        if (candidate) {
+            document.getElementById('searchInput').value = sbd;
+            currentCandidate = candidate;
+            displayResult(candidate);
+        } else {
+            // Nếu không tìm thấy, xóa URL param và hiển thị thông báo
+            window.history.replaceState({}, '', window.location.pathname);
+            document.getElementById('notFoundSection').style.display = 'block';
+        }
+    }
+}
+
+// Cập nhật URL với SBD
+function updateURL(sbd) {
+    const url = new URL(window.location);
+    url.searchParams.set('sbd', sbd);
+    window.history.pushState({}, '', url);
 }
 
 // Chuyển đổi chuỗi có dấu thành không dấu
@@ -131,6 +168,7 @@ function selectCandidate(candidate) {
     hideAutocomplete();
     document.getElementById('searchInput').value = candidate.SBD;
     currentCandidate = candidate;
+    updateURL(candidate.SBD);
     displayResult(candidate);
 }
 
@@ -178,6 +216,7 @@ function searchCandidate() {
     
     if (candidate) {
         currentCandidate = candidate;
+        updateURL(candidate.SBD);
         displayResult(candidate);
     } else {
         document.getElementById('notFoundSection').style.display = 'block';
@@ -200,6 +239,7 @@ function showSuggestions(candidates) {
         `;
         item.onclick = () => {
             currentCandidate = c;
+            updateURL(c.SBD);
             displayResult(c);
             suggestionSection.style.display = 'none';
         };
@@ -211,6 +251,23 @@ function showSuggestions(candidates) {
 
 // Hiển thị kết quả
 function displayResult(candidate) {
+    // Cập nhật title của trang
+    const candidateName = candidate['Họ tên'] || 'Thí sinh';
+    const candidateSBD = candidate.SBD || '';
+    document.title = `${candidateName} - ${candidateSBD} | Tra Cứu Kết Quả Thi Tuyển`;
+    
+    // Gửi event tracking đến Google Analytics
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'tra_cuu_ket_qua', {
+            'event_category': 'Tra cứu',
+            'event_label': `${candidateSBD} - ${candidateName}`,
+            'sbd': candidateSBD,
+            'ho_ten': candidateName,
+            'vi_tri': candidate['Vị trí dự tuyển'] || 'Không rõ',
+            'diem_tong': candidate['Tổng điểm'] || 'Bỏ thi'
+        });
+    }
+    
     // Hiển thị section kết quả
     document.getElementById('resultSection').style.display = 'block';
     
@@ -633,6 +690,12 @@ function searchAgain() {
     document.getElementById('notFoundSection').style.display = 'none';
     document.getElementById('suggestionSection').style.display = 'none';
     document.getElementById('searchInput').focus();
+    
+    // Xóa SBD khỏi URL
+    window.history.pushState({}, '', window.location.pathname);
+    
+    // Reset title về mặc định
+    document.title = 'Tra Cứu Kết Quả Thi Tuyển';
     
     // Cuộn lên đầu
     window.scrollTo({ top: 0, behavior: 'smooth' });
