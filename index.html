@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <link rel="icon" href="/assets/images/logo.png" type="image/png">
@@ -10,14 +11,26 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700&display=swap" />
     <!-- <link rel="stylesheet" href="/assets/css/kq-style.css" /> -->
     <link rel="stylesheet" href="/assets/css/kq-style.min.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W0JJWJ2CHT"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-W0JJWJ2CHT');
+    </script>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
             <h1>🎓 Tra Cứu Kết Quả Thi Tuyển</h1>
             <p style="font-size: 14px;">Tra cứu điểm thi, kết quả và tỷ lệ chọi theo thí sinh</p>
             <div style="margin-top: 15px;">
-                <a href="/ungvien.html" style="display: inline-block; padding: 10px 25px; background: white; color: #667eea; text-decoration: none; border-radius: 8px; font-weight: 600; border: 2px solid #667eea; transition: all 0.3s;">
+                <a href="/ungvien.html"
+                    style="display: inline-block; padding: 10px 25px; background: white; color: #667eea; text-decoration: none; border-radius: 8px; font-weight: 600; border: 2px solid #667eea; transition: all 0.3s;">
                     ← Quay lại Danh sách Ứng viên
                 </a>
             </div>
@@ -28,12 +41,14 @@
             <h2>🔍 Tìm Kiếm Thí Sinh</h2>
             <div class="search-box">
                 <div class="search-input-wrapper">
-                    <input type="text" id="searchInput" placeholder="Nhập SBD (vd: C32922) hoặc Họ tên thí sinh..." autocomplete="off">
+                    <input type="text" id="searchInput" placeholder="Nhập SBD (vd: C32922) hoặc Họ tên thí sinh..."
+                        autocomplete="off">
                     <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
                 </div>
                 <button onclick="searchCandidate()">Tra cứu</button>
             </div>
-            <p class="hint">💡 Mẹo: Nhập SBD hoặc tên (có thể gõ không dấu hoặc viết liền, vd: "nguyenvana", "nguyen van a")</p>
+            <p class="hint">💡 Mẹo: Nhập SBD hoặc tên (có thể gõ không dấu hoặc viết liền, vd: "nguyenvana", "nguyen van
+                a")</p>
         </div>
 
         <!-- Kết quả tìm kiếm -->
@@ -182,4 +197,5 @@
     <!-- <script src="/assets/js/kq-script.js"></script> -->
     <script src="/assets/js/kq-script.min.js"></script>
 </body>
+
 </html>

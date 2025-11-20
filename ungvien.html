@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <link rel="icon" href="/assets/images/logo.png" type="image/png">
@@ -32,19 +33,31 @@
 
     <link rel="stylesheet" href="/assets/css/style.min.css" />
     <!-- <link rel="stylesheet" href="/assets/css/style.css" /> -->
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W0JJWJ2CHT"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-W0JJWJ2CHT');
+    </script>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
             <h1>📊 Dữ Liệu Ứng Viên</h1>
             <p style="font-size: 14px;">Quản lý, tìm kiếm và phân tích thông tin ứng viên</p>
             <div style="margin-top: 20px;">
-                <a href="/index.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 10px; font-weight: 600; transition: transform 0.2s; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                <a href="/index.html"
+                    style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 10px; font-weight: 600; transition: transform 0.2s; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
                     🎓 Tra Cứu Kết Quả Thi
                 </a>
             </div>
         </div>
-        
+
         <div class="controls">
             <div class="search-group">
                 <input type="text" id="searchInput" placeholder="🔍 Tìm theo tên hoặc CCCD...">
@@ -62,10 +75,11 @@
                     <option value="Nam">Nam</option>
                     <option value="Nữ">Nữ</option>
                 </select>
-                
+
             </div>
-            <div class="button-group" style="text-align: center; margin: auto; padding-bottom: 20px;"><button onclick="search()">Tìm kiếm</button></div>
-            
+            <div class="button-group" style="text-align: center; margin: auto; padding-bottom: 20px;"><button
+                    onclick="search()">Tìm kiếm</button></div>
+
             <div class="stats">
                 <div class="stat-box">
                     <h3>Tổng Ứng Viên</h3>
@@ -85,7 +99,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="content">
             <!-- Navigation Tabs -->
             <div class="tabs">
@@ -93,7 +107,7 @@
                 <button class="tab-button" onclick="switchTab('dashboard')">📈 Thống kê</button>
                 <button class="tab-button" onclick="switchTab('advanced')">🎯 Nâng Cao</button>
             </div>
-            
+
             <!-- Dashboard Tab -->
             <div id="dashboard" class="tab-content">
                 <div class="statistics-section">
@@ -102,7 +116,8 @@
                         <div class="chart-wrapper">
                             <h3>Số Lượng Ứng Viên Theo Vị Trí (Tất Cả Môn)</h3>
                             <div style="margin-bottom: 10px; text-align: center;">
-                                <button onclick="togglePositionChart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                <button onclick="togglePositionChart()"
+                                    style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
                                     🔄 Đảo Ngược Thứ Tự
                                 </button>
                             </div>
@@ -113,7 +128,8 @@
                         <div class="chart-wrapper">
                             <h3>Tỷ Lệ Chọi (%)</h3>
                             <div style="margin-bottom: 10px; text-align: center;">
-                                <button onclick="toggleRatioChart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                <button onclick="toggleRatioChart()"
+                                    style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
                                     🔄 Đảo Ngược Thứ Tự
                                 </button>
                             </div>
@@ -123,14 +139,15 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="statistics-section">
                     <h2>📍 Phân Bổ Nguyện Vọng</h2>
                     <div class="chart-container">
                         <div class="chart-wrapper">
                             <h3>Phân Bổ Nguyện Vọng 1 (Tất Cả Trường)</h3>
                             <div style="margin-bottom: 10px; text-align: center;">
-                                <button onclick="toggleNV1Chart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                <button onclick="toggleNV1Chart()"
+                                    style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
                                     🔄 Đảo Ngược Thứ Tự
                                 </button>
                             </div>
@@ -141,7 +158,8 @@
                         <div class="chart-wrapper">
                             <h3>Phân Bổ Nguyện Vọng 2 (Tất Cả Trường)</h3>
                             <div style="margin-bottom: 10px; text-align: center;">
-                                <button onclick="toggleNV2Chart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                <button onclick="toggleNV2Chart()"
+                                    style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
                                     🔄 Đảo Ngược Thứ Tự
                                 </button>
                             </div>
@@ -151,7 +169,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="statistics-section">
                     <h2>👥 Phân Bổ Giới Tính</h2>
                     <div class="chart-container">
@@ -177,7 +195,8 @@
                         <div class="chart-wrapper">
                             <h3>Số Lượng Ứng Viên Theo Chuyên Ngành</h3>
                             <div style="margin-bottom: 10px; text-align: center;">
-                                <button onclick="toggleMajorChart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                <button onclick="toggleMajorChart()"
+                                    style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
                                     🔄 Đảo Ngược Thứ Tự
                                 </button>
                             </div>
@@ -188,7 +207,8 @@
                         <div class="chart-wrapper">
                             <h3>Phân Bổ Nam/Nữ Theo Chuyên Ngành</h3>
                             <div style="margin-bottom: 10px; text-align: center;">
-                                <button onclick="toggleGenderMajorChart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                <button onclick="toggleGenderMajorChart()"
+                                    style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
                                     🔄 Đảo Ngược Thứ Tự
                                 </button>
                             </div>
@@ -205,7 +225,8 @@
                         <div class="chart-wrapper">
                             <h3>So Sánh NV1 vs NV2 Theo Vị Trí</h3>
                             <div style="margin-bottom: 10px; text-align: center;">
-                                <button onclick="toggleNV1vs2Chart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                <button onclick="toggleNV1vs2Chart()"
+                                    style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
                                     🔄 Đảo Ngược Thứ Tự
                                 </button>
                             </div>
@@ -216,7 +237,8 @@
                         <div class="chart-wrapper">
                             <h3>Top 10 Cặp Vị Trí - Nguyện Vọng 1 Phổ Biến Nhất</h3>
                             <div style="margin-bottom: 10px; text-align: center;">
-                                <button onclick="toggleTopPairsChart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                <button onclick="toggleTopPairsChart()"
+                                    style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
                                     🔄 Đảo Ngược Thứ Tự
                                 </button>
                             </div>
@@ -233,7 +255,8 @@
                         <div class="chart-wrapper">
                             <h3>Phân Bổ Tuổi Ứng Viên (Theo Năm Sinh)</h3>
                             <div style="margin-bottom: 10px; text-align: center;">
-                                <button onclick="toggleAgeChart()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                <button onclick="toggleAgeChart()"
+                                    style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
                                     🔄 Đảo Ngược Thứ Tự
                                 </button>
                             </div>
@@ -248,11 +271,11 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Table Tab -->
             <div id="table" class="tab-content active">
                 <p class="info-text" id="infoText"></p>
-                
+
                 <div class="table-wrapper">
                     <table id="resultsTable">
                         <thead>
@@ -269,21 +292,24 @@
                             </tr>
                         </thead>
                         <tbody id="tableBody">
-                            <tr><td colspan="9" class="no-data">Đang tải dữ liệu...</td></tr>
+                            <tr>
+                                <td colspan="9" class="no-data">Đang tải dữ liệu...</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
-                
+
                 <div class="pagination" id="pagination"></div>
             </div>
         </div>
     </div>
-    
+
     <!-- Load dữ liệu -->
     <script src="/assets/js/data.min.js"></script>
     <!-- <script src="/assets/js/data.js"></script> -->
     <script src="/assets/js/script.min.js"></script>
     <!-- <script src="/assets/js/script.js"></script> -->
-    
+
 </body>
+
 </html>
