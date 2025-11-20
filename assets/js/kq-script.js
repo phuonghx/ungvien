@@ -495,33 +495,7 @@ function displayNV2Competitors(candidate) {
     listContainer.appendChild(table);
 }
 
-// Toggle hiển thị danh sách NV1
-function toggleNV1List() {
-    const list = document.getElementById('nv1CompetitorList');
-    const btn = document.getElementById('toggleNV1Btn');
-    
-    if (list.style.display === 'none') {
-        list.style.display = 'block';
-        btn.textContent = btn.textContent.replace('Xem', 'Ẩn');
-    } else {
-        list.style.display = 'none';
-        btn.textContent = btn.textContent.replace('Ẩn', 'Xem');
-    }
-}
 
-// Toggle hiển thị danh sách NV2
-function toggleNV2List() {
-    const list = document.getElementById('nv2CompetitorList');
-    const btn = document.getElementById('toggleNV2Btn');
-    
-    if (list.style.display === 'none') {
-        list.style.display = 'block';
-        btn.textContent = btn.textContent.replace('Xem', 'Ẩn');
-    } else {
-        list.style.display = 'none';
-        btn.textContent = btn.textContent.replace('Ẩn', 'Xem');
-    }
-}
 
 // In kết quả
 function printResult() {
