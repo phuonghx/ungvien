@@ -406,11 +406,11 @@ function drawCharts(candidate) {
     const totalScoreStr = candidate['Tổng điểm'];
     const totalScore = parseFloat(totalScoreStr);
     
-    // Lấy tất cả điểm theo vị trí
+    // Lấy tất cả điểm theo vị trí (chỉ tính điểm >= 50)
     const positionScores = allResults
         .filter(c => c['Vị trí dự tuyển'] === position && c['Tổng điểm'] && c['Tổng điểm'] !== 'Bỏ thi' && c['Tổng điểm'].trim() !== '')
         .map(c => parseFloat(c['Tổng điểm']))
-        .filter(s => !isNaN(s));
+        .filter(s => !isNaN(s) && s >= 50);
     
     // Phân bố điểm theo khoảng
     const scoreBins = {};
@@ -540,12 +540,13 @@ function displayNV1Competitors(candidate) {
     
     document.getElementById('nv1CompetitorSection').style.display = 'block';
     
-    // Lọc thí sinh cùng vị trí và cùng NV1
+    // Lọc thí sinh cùng vị trí và cùng NV1 (chỉ tính điểm >= 50)
     const competitors = allResults.filter(c => {
         const samePosition = c['Vị trí dự tuyển'] === position;
         const sameSchool = c['Tên trường NV1'] === nv1;
         const hasScore = c['Tổng điểm'] && c['Tổng điểm'] !== 'Bỏ thi' && c['Tổng điểm'].trim() !== '';
-        return samePosition && sameSchool && hasScore;
+        const score = parseFloat(c['Tổng điểm']);
+        return samePosition && sameSchool && hasScore && !isNaN(score) && score >= 50;
     });
     
     // Sắp xếp theo điểm giảm dần
@@ -617,12 +618,13 @@ function displayNV2Competitors(candidate) {
     
     document.getElementById('nv2CompetitorSection').style.display = 'block';
     
-    // Lọc thí sinh cùng vị trí và cùng NV2
+    // Lọc thí sinh cùng vị trí và cùng NV2 (chỉ tính điểm >= 50)
     const competitors = allResults.filter(c => {
         const samePosition = c['Vị trí dự tuyển'] === position;
         const sameSchool = c['Tên Trường NV2'] === nv2;
         const hasScore = c['Tổng điểm'] && c['Tổng điểm'] !== 'Bỏ thi' && c['Tổng điểm'].trim() !== '';
-        return samePosition && sameSchool && hasScore;
+        const score = parseFloat(c['Tổng điểm']);
+        return samePosition && sameSchool && hasScore && !isNaN(score) && score >= 50;
     });
     
     // Sắp xếp theo điểm giảm dần
@@ -690,11 +692,11 @@ function displayScoreComparison(candidate) {
     const totalScoreStr = candidate['Tổng điểm'];
     const totalScore = parseFloat(totalScoreStr);
     
-    // Lấy tất cả điểm theo vị trí
+    // Lấy tất cả điểm theo vị trí (chỉ tính điểm >= 50)
     const positionScores = allResults
         .filter(c => c['Vị trí dự tuyển'] === position && c['Tổng điểm'] && c['Tổng điểm'] !== 'Bỏ thi' && c['Tổng điểm'].trim() !== '')
         .map(c => parseFloat(c['Tổng điểm']))
-        .filter(s => !isNaN(s))
+        .filter(s => !isNaN(s) && s >= 50)
         .sort((a, b) => b - a);
     
     if (positionScores.length === 0) return;
@@ -709,19 +711,27 @@ function displayScoreComparison(candidate) {
     document.getElementById('yourScore').textContent = totalScore || 'Bỏ thi';
     
     if (!isNaN(totalScore)) {
-        const rank = positionScores.indexOf(totalScore) + 1;
-        const percentile = ((positionScores.length - rank + 1) / positionScores.length * 100).toFixed(1);
-        document.getElementById('yourPercentile').textContent = `Top ${percentile}% | Hạng ${rank}/${positionScores.length}`;
-        
-        // Đánh giá
-        let assessment = '';
-        if (percentile >= 90) assessment = '🏆 Xuất sắc';
-        else if (percentile >= 75) assessment = '⭐ Rất tốt';
-        else if (percentile >= 50) assessment = '✅ Khá';
-        else if (percentile >= 25) assessment = '📊 Trung bình';
-        else assessment = '💪 Cần cố gắng';
-        
-        document.getElementById('yourPercentile').textContent += ` - ${assessment}`;
+        // Kiểm tra điểm tối thiểu
+        if (totalScore < 50) {
+            document.getElementById('yourPercentile').innerHTML = `
+                <span style="color: #e74c3c; font-weight: 600;">❌ Không đủ điểm tối thiểu (50 điểm)</span>
+            `;
+            document.getElementById('yourScore').style.color = '#e74c3c';
+        } else {
+            const rank = positionScores.indexOf(totalScore) + 1;
+            const percentile = ((positionScores.length - rank + 1) / positionScores.length * 100).toFixed(1);
+            document.getElementById('yourPercentile').textContent = `Top ${percentile}% | Hạng ${rank}/${positionScores.length}`;
+            
+            // Đánh giá
+            let assessment = '';
+            if (percentile >= 90) assessment = '🏆 Xuất sắc';
+            else if (percentile >= 75) assessment = '⭐ Rất tốt';
+            else if (percentile >= 50) assessment = '✅ Khá';
+            else if (percentile >= 25) assessment = '📊 Trung bình';
+            else assessment = '💪 Cần cố gắng';
+            
+            document.getElementById('yourPercentile').textContent += ` - ${assessment}`;
+        }
     } else {
         document.getElementById('yourPercentile').textContent = 'Không có dữ liệu';
     }
@@ -761,6 +771,28 @@ function displayWishAnalysis(candidate) {
     const nv2 = candidate['Tén Trường NV2'];
     
     if (isNaN(totalScore)) return;
+    
+    // Kiểm tra điểm tối thiểu (50 điểm)
+    if (totalScore < 50) {
+        document.getElementById('nv1Analysis').style.display = 'block';
+        document.getElementById('nv1AnalysisSchool').textContent = nv1 || 'Nguyện vọng 1';
+        document.getElementById('nv1AnalysisContent').innerHTML = `
+            <div class="analysis-low">
+                <strong>⚠️ Không đạt điểm tối thiểu</strong>
+                <p>Điểm của bạn (${totalScore}) thấp hơn mức tối thiểu <strong>50 điểm</strong>. Thí sinh không đủ điều kiện xét tuyển.</p>
+            </div>
+        `;
+        
+        if (nv2 && nv2.trim()) {
+            document.getElementById('nv2Analysis').style.display = 'block';
+            document.getElementById('nv2AnalysisSchool').textContent = nv2;
+            document.getElementById('nv2AnalysisContent').innerHTML = `
+                <p>Không đủ điều kiện xét tuyển do điểm thấp hơn mức tối thiểu (50 điểm).</p>
+            `;
+        }
+        
+        return;
+    }
     
     // Phân tích NV1
     if (nv1 && nv1.trim()) {
