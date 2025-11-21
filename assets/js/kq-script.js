@@ -971,16 +971,44 @@ function shareResult() {
     document.getElementById('shareLink').value = shareUrl;
     
     // Tạo QR code
+    const qrContainer = document.querySelector('.qr-code-container');
+    
+    // Xóa QR code cũ nếu có
+    const oldQR = qrContainer.querySelector('#qrcode');
+    if (oldQR) {
+        oldQR.remove();
+    }
+    
+    // Ẩn canvas và tạo div mới cho QR code
     const canvas = document.getElementById('qrCodeCanvas');
-    if (typeof QRCode !== 'undefined') {
-        QRCode.toCanvas(canvas, shareUrl, {
-            width: 200,
-            margin: 2,
-            color: {
-                dark: '#667eea',
-                light: '#ffffff'
-            }
-        });
+    canvas.style.display = 'none';
+    
+    // Tạo div chứa QR code
+    const qrDiv = document.createElement('div');
+    qrDiv.id = 'qrcode';
+    qrDiv.style.display = 'flex';
+    qrDiv.style.justifyContent = 'center';
+    qrDiv.style.alignItems = 'center';
+    qrContainer.insertBefore(qrDiv, qrContainer.firstChild);
+    
+    // Kiểm tra và tạo QR code
+    try {
+        if (typeof QRCode !== 'undefined') {
+            new QRCode(qrDiv, {
+                text: shareUrl,
+                width: 200,
+                height: 200,
+                colorDark: '#667eea',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        } else {
+            console.error('Thư viện QRCode chưa được tải');
+            qrDiv.innerHTML = '<p style="color: red;">Không thể tạo QR code</p>';
+        }
+    } catch (error) {
+        console.error('Lỗi khi tạo QR code:', error);
+        qrDiv.innerHTML = '<p style="color: red;">Lỗi: ' + error.message + '</p>';
     }
 }
 
