@@ -347,6 +347,12 @@ function displayResult(candidate) {
     displayNV1Competitors(candidate);
     displayNV2Competitors(candidate);
     
+    // Hiển thị so sánh điểm số
+    displayScoreComparison(candidate);
+    
+    // Hiển thị phân tích nguyện vọng
+    displayWishAnalysis(candidate);
+    
     // Cuộn đến kết quả
     document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
@@ -677,6 +683,332 @@ function displayNV2Competitors(candidate) {
 }
 
 
+
+// Hiển thị so sánh điểm số
+function displayScoreComparison(candidate) {
+    const position = candidate['Vị trí dự tuyển'];
+    const totalScoreStr = candidate['Tổng điểm'];
+    const totalScore = parseFloat(totalScoreStr);
+    
+    // Lấy tất cả điểm theo vị trí
+    const positionScores = allResults
+        .filter(c => c['Vị trí dự tuyển'] === position && c['Tổng điểm'] && c['Tổng điểm'] !== 'Bỏ thi' && c['Tổng điểm'].trim() !== '')
+        .map(c => parseFloat(c['Tổng điểm']))
+        .filter(s => !isNaN(s))
+        .sort((a, b) => b - a);
+    
+    if (positionScores.length === 0) return;
+    
+    // Tính toán các mốc
+    const maxScore = Math.max(...positionScores);
+    const minScore = Math.min(...positionScores);
+    const avgScore = (positionScores.reduce((a, b) => a + b, 0) / positionScores.length).toFixed(2);
+    const medianScore = positionScores[Math.floor(positionScores.length / 2)].toFixed(2);
+    
+    // Hiển thị điểm của thí sinh
+    document.getElementById('yourScore').textContent = totalScore || 'Bỏ thi';
+    
+    if (!isNaN(totalScore)) {
+        const rank = positionScores.indexOf(totalScore) + 1;
+        const percentile = ((positionScores.length - rank + 1) / positionScores.length * 100).toFixed(1);
+        document.getElementById('yourPercentile').textContent = `Top ${percentile}% | Hạng ${rank}/${positionScores.length}`;
+        
+        // Đánh giá
+        let assessment = '';
+        if (percentile >= 90) assessment = '🏆 Xuất sắc';
+        else if (percentile >= 75) assessment = '⭐ Rất tốt';
+        else if (percentile >= 50) assessment = '✅ Khá';
+        else if (percentile >= 25) assessment = '📊 Trung bình';
+        else assessment = '💪 Cần cố gắng';
+        
+        document.getElementById('yourPercentile').textContent += ` - ${assessment}`;
+    } else {
+        document.getElementById('yourPercentile').textContent = 'Không có dữ liệu';
+    }
+    
+    // Các mốc khác
+    document.getElementById('maxScore').textContent = maxScore.toFixed(2);
+    document.getElementById('maxScoreDetail').textContent = !isNaN(totalScore) 
+        ? `Bạn kém ${(maxScore - totalScore).toFixed(2)} điểm`
+        : '-';
+    
+    document.getElementById('avgScore').textContent = avgScore;
+    document.getElementById('avgScoreDetail').textContent = !isNaN(totalScore)
+        ? totalScore > avgScore 
+            ? `Bạn cao hơn ${(totalScore - avgScore).toFixed(2)} điểm` 
+            : `Bạn thấp hơn ${(avgScore - totalScore).toFixed(2)} điểm`
+        : '-';
+    
+    document.getElementById('medianScore').textContent = medianScore;
+    document.getElementById('medianScoreDetail').textContent = !isNaN(totalScore)
+        ? totalScore > medianScore 
+            ? `Bạn cao hơn ${(totalScore - medianScore).toFixed(2)} điểm` 
+            : `Bạn thấp hơn ${(medianScore - totalScore).toFixed(2)} điểm`
+        : '-';
+    
+    document.getElementById('minScore').textContent = minScore.toFixed(2);
+    document.getElementById('minScoreDetail').textContent = !isNaN(totalScore)
+        ? `Bạn cao hơn ${(totalScore - minScore).toFixed(2)} điểm`
+        : '-';
+}
+
+// Hiển thị phân tích nguyện vọng
+function displayWishAnalysis(candidate) {
+    const position = candidate['Vị trí dự tuyển'];
+    const totalScoreStr = candidate['Tổng điểm'];
+    const totalScore = parseFloat(totalScoreStr);
+    const nv1 = candidate['Tên trường NV1'];
+    const nv2 = candidate['Tén Trường NV2'];
+    
+    if (isNaN(totalScore)) return;
+    
+    // Phân tích NV1
+    if (nv1 && nv1.trim()) {
+        document.getElementById('nv1Analysis').style.display = 'block';
+        document.getElementById('nv1AnalysisSchool').textContent = nv1;
+        
+        const nv1Stats = calculateCompetitionStats(candidate, nv1, 'NV1');
+        const rank = parseInt(nv1Stats.rank);
+        const total = parseInt(nv1Stats.total);
+        
+        let analysis = '';
+        if (rank !== '-' && rank > 0) {
+            // Trường hợp đặc biệt: chỉ có 1 người duy nhất
+            if (total === 1 && rank === 1) {
+                analysis = `<div class="analysis-excellent">
+                    <strong>🎯 Khả năng đỗ: RẤT CAO</strong>
+                    <p>Bạn là <strong>ứng viên duy nhất</strong> chọn trường này ở vị trí ${position}. Cơ hội trúng tuyển rất cao!</p>
+                </div>`;
+            } else {
+                const topPercent = (rank / total * 100).toFixed(1);
+                
+                // Top % càng thấp = xếp hạng càng cao = khả năng đỗ càng cao
+                if (topPercent <= 10) {
+                    analysis = `<div class="analysis-excellent">
+                        <strong>🎯 Khả năng đỗ: RẤT CAO</strong>
+                        <p>Bạn xếp hạng <strong>${rank}/${total}</strong> (Top ${topPercent}%). Vị trí rất thuận lợi!</p>
+                    </div>`;
+                } else if (topPercent <= 30) {
+                    analysis = `<div class="analysis-good">
+                        <strong>✅ Khả năng đỗ: CAO</strong>
+                        <p>Bạn xếp hạng <strong>${rank}/${total}</strong> (Top ${topPercent}%). Khả năng đỗ tốt!</p>
+                    </div>`;
+                } else if (topPercent <= 50) {
+                    analysis = `<div class="analysis-medium">
+                        <strong>📊 Khả năng đỗ: TRUNG BÌNH</strong>
+                        <p>Bạn xếp hạng <strong>${rank}/${total}</strong> (Top ${topPercent}%). Nên cân nhắc thêm nguyện vọng an toàn.</p>
+                    </div>`;
+                } else {
+                    analysis = `<div class="analysis-low">
+                        <strong>⚠️ Khả năng đỗ: THẤP</strong>
+                        <p>Bạn xếp hạng <strong>${rank}/${total}</strong> (Top ${topPercent}%). Nên xem xét các trường khác có tỷ lệ chọi thấp hơn.</p>
+                    </div>`;
+                }
+            }
+        }
+        
+        document.getElementById('nv1AnalysisContent').innerHTML = analysis;
+    }
+    
+    // Phân tích NV2
+    if (nv2 && nv2.trim()) {
+        document.getElementById('nv2Analysis').style.display = 'block';
+        document.getElementById('nv2AnalysisSchool').textContent = nv2;
+        
+        const nv2Stats = calculateCompetitionStats(candidate, nv2, 'NV2');
+        const rank = parseInt(nv2Stats.rank);
+        const total = parseInt(nv2Stats.total);
+        
+        let analysis = '';
+        if (rank !== '-' && rank > 0) {
+            let message = '';
+            
+            // Trường hợp đặc biệt: chỉ có 1 người duy nhất
+            if (total === 1 && rank === 1) {
+                message = `Bạn là <strong>ứng viên duy nhất</strong> chọn trường này làm NV2 ở vị trí ${position}. Nguyện vọng dự phòng RẤT TỐT! 🎯`;
+            } else {
+                const topPercent = (rank / total * 100).toFixed(1);
+                
+                if (topPercent <= 30) {
+                    message = `Xếp hạng: <strong>${rank}/${total}</strong> (Top ${topPercent}%) - Nguyện vọng dự phòng RẤT TỐT! 🎯`;
+                } else if (topPercent <= 50) {
+                    message = `Xếp hạng: <strong>${rank}/${total}</strong> (Top ${topPercent}%) - Nguyện vọng dự phòng TỐT! ✅`;
+                } else {
+                    message = `Xếp hạng: <strong>${rank}/${total}</strong> (Top ${topPercent}%) - Nguyện vọng dự phòng hợp lý.`;
+                }
+            }
+            
+            analysis = `<p>${message}</p>`;
+        }
+        
+        document.getElementById('nv2AnalysisContent').innerHTML = analysis;
+    }
+}
+
+// Hiển thị các trường gợi ý
+function displayAlternativeSchools(candidate) {
+    const position = candidate['Vị trí dự tuyển'];
+    const totalScore = parseFloat(candidate['Tổng điểm']);
+    const currentNV1 = candidate['Tên trường NV1'];
+    const currentNV2 = candidate['Tên Trường NV2'];
+    
+    if (isNaN(totalScore)) return;
+    
+    // Chỉ phân tích các trường trong NV1 và NV2 của thí sinh
+    const schoolsToAnalyze = [];
+    
+    if (currentNV1 && currentNV1.trim()) {
+        schoolsToAnalyze.push(currentNV1);
+    }
+    
+    if (currentNV2 && currentNV2.trim() && currentNV2 !== currentNV1) {
+        schoolsToAnalyze.push(currentNV2);
+    }
+    
+    // Nếu không có trường nào để phân tích, ẩn section
+    if (schoolsToAnalyze.length === 0) {
+        document.getElementById('alternativeSchools').style.display = 'none';
+        return;
+    }
+    
+    // Thống kê các trường khác cùng vị trí (loại trừ NV1 và NV2 của thí sinh)
+    const schoolStats = {};
+    
+    allResults.forEach(c => {
+        if (c['Vị trí dự tuyển'] !== position) return;
+        
+        const school = c['Tên trường NV1'];
+        if (!school || !school.trim()) return;
+        
+        // Bỏ qua nếu là trường NV1 hoặc NV2 của thí sinh hiện tại
+        if (school === currentNV1 || school === currentNV2) return;
+        
+        const score = parseFloat(c['Tổng điểm']);
+        if (isNaN(score)) return;
+        
+        if (!schoolStats[school]) {
+            schoolStats[school] = { scores: [], count: 0 };
+        }
+        
+        schoolStats[school].scores.push(score);
+        schoolStats[school].count++;
+    });
+    
+    // Tính toán và sắp xếp
+    const alternatives = [];
+    
+    for (const school in schoolStats) {
+        const scores = schoolStats[school].scores.sort((a, b) => b - a);
+        const myRank = scores.filter(s => s > totalScore).length + 1;
+        const total = scores.length;
+        const competitionRatio = total;
+        const topPercent = (myRank / total * 100);
+        
+        alternatives.push({
+            school,
+            myRank,
+            total,
+            competitionRatio,
+            topPercent,
+            isSafer: topPercent <= 30
+        });
+    }
+    
+    // Sắp xếp theo topPercent tăng dần (dễ đỗ nhất trước)
+    alternatives.sort((a, b) => a.topPercent - b.topPercent);
+    
+    // Hiển thị top 5 trường dễ đỗ nhất
+    const safeSchools = alternatives.filter(a => a.isSafer).slice(0, 5);
+    
+    if (safeSchools.length > 0) {
+        document.getElementById('alternativeSchools').style.display = 'block';
+        
+        let html = '<p style="margin-bottom: 15px; color: #7f8c8d; font-size: 14px;">Dựa trên điểm của bạn, các trường sau có tỷ lệ chọi thấp hơn và có thể xem xét:</p>';
+        html += '<div class="alternative-grid">';
+        safeSchools.forEach((alt, index) => {
+            const safetyLevel = alt.topPercent <= 10 ? '🟢 Rất an toàn' 
+                : alt.topPercent <= 20 ? '🟡 An toàn' 
+                : '🟠 Khá an toàn';
+            
+            html += `
+                <div class="alternative-item">
+                    <div class="alternative-rank">#${index + 1}</div>
+                    <div class="alternative-info">
+                        <div class="alternative-school">${alt.school}</div>
+                        <div class="alternative-stats">
+                            <span class="stat">Hạng: ${alt.myRank}/${alt.total}</span>
+                            <span class="stat">Top ${alt.topPercent.toFixed(1)}%</span>
+                            <span class="stat safety">${safetyLevel}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        html += '</div>';
+        
+        document.getElementById('alternativeList').innerHTML = html;
+    } else {
+        document.getElementById('alternativeSchools').style.display = 'none';
+    }
+}
+
+// Chia sẻ kết quả
+function shareResult() {
+    if (!currentCandidate) return;
+    
+    const modal = document.getElementById('shareModal');
+    modal.style.display = 'flex';
+    
+    // Tạo link chia sẻ
+    const shareUrl = `${window.location.origin}${window.location.pathname}?sbd=${encodeURIComponent(currentCandidate.SBD)}`;
+    document.getElementById('shareLink').value = shareUrl;
+    
+    // Tạo QR code
+    const canvas = document.getElementById('qrCodeCanvas');
+    if (typeof QRCode !== 'undefined') {
+        QRCode.toCanvas(canvas, shareUrl, {
+            width: 200,
+            margin: 2,
+            color: {
+                dark: '#667eea',
+                light: '#ffffff'
+            }
+        });
+    }
+}
+
+// Đóng modal chia sẻ
+function closeShareModal() {
+    document.getElementById('shareModal').style.display = 'none';
+}
+
+// Sao chép link
+function copyShareLink() {
+    const input = document.getElementById('shareLink');
+    input.select();
+    document.execCommand('copy');
+    alert('✅ Đã sao chép link!');
+}
+
+// Chia sẻ lên Facebook
+function shareToFacebook() {
+    const shareUrl = document.getElementById('shareLink').value;
+    const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+    window.open(fbUrl, '_blank', 'width=600,height=400');
+}
+
+// Chia sẻ lên Zalo
+function shareToZalo() {
+    const shareUrl = document.getElementById('shareLink').value;
+    const zaloUrl = `https://zalo.me/share?url=${encodeURIComponent(shareUrl)}`;
+    window.open(zaloUrl, '_blank', 'width=600,height=400');
+}
+
+// Tải PDF
+function downloadPDF() {
+    alert('Tính năng tải PDF đang được phát triển!');
+    // Có thể sử dụng html2pdf hoặc jsPDF để implement
+}
 
 // In kết quả
 function printResult() {

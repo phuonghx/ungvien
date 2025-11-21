@@ -9,8 +9,8 @@
     <title>Tra Cứu Kết Quả Thi Tuyển</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700&display=swap" />
-    <!-- <link rel="stylesheet" href="/assets/css/kq-style.css" /> -->
-    <link rel="stylesheet" href="/assets/css/kq-style.min.css" />
+    <link rel="stylesheet" href="/assets/css/kq-style.css" />
+    <!-- <link rel="stylesheet" href="/assets/css/kq-style.min.css" /> -->
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-W0JJWJ2CHT"></script>
@@ -143,6 +143,35 @@
                 </div>
             </div>
 
+            <h2>📈 So Sánh Điểm Số Theo Môn</h2>
+            <div class="comparison-section">
+                <div class="comparison-card">
+                    <div class="comparison-label">Điểm Của Bạn</div>
+                    <div class="comparison-value main" id="yourScore">-</div>
+                    <div class="comparison-rank" id="yourPercentile">-</div>
+                </div>
+                <div class="comparison-card">
+                    <div class="comparison-label">Điểm Cao Nhất</div>
+                    <div class="comparison-value high" id="maxScore">-</div>
+                    <div class="comparison-detail" id="maxScoreDetail">-</div>
+                </div>
+                <div class="comparison-card">
+                    <div class="comparison-label">Điểm Trung Bình</div>
+                    <div class="comparison-value avg" id="avgScore">-</div>
+                    <div class="comparison-detail" id="avgScoreDetail">-</div>
+                </div>
+                <div class="comparison-card">
+                    <div class="comparison-label">Điểm Trung Vị</div>
+                    <div class="comparison-value median" id="medianScore">-</div>
+                    <div class="comparison-detail" id="medianScoreDetail">-</div>
+                </div>
+                <div class="comparison-card">
+                    <div class="comparison-label">Điểm Thấp Nhất</div>
+                    <div class="comparison-value low" id="minScore">-</div>
+                    <div class="comparison-detail" id="minScoreDetail">-</div>
+                </div>
+            </div>
+
             <h2>📈 Phân Tích Điểm Số</h2>
             <div class="chart-container">
                 <div class="chart-wrapper">
@@ -153,6 +182,18 @@
                 <div class="chart-wrapper">
                     <h3>Thứ hạng của bạn trong NV1</h3>
                     <canvas id="rankChart"></canvas>
+                </div>
+            </div>
+
+            <h2>💡 Phân Tích Nguyện Vọng</h2>
+            <div class="suggestion-analysis" id="suggestionAnalysis">
+                <div class="analysis-card success" id="nv1Analysis" style="display: none;">
+                    <h3>✅ Nguyện Vọng 1: <span id="nv1AnalysisSchool"></span></h3>
+                    <div class="analysis-content" id="nv1AnalysisContent"></div>
+                </div>
+                <div class="analysis-card warning" id="nv2Analysis" style="display: none;">
+                    <h3>⚠️ Nguyện Vọng 2: <span id="nv2AnalysisSchool"></span></h3>
+                    <div class="analysis-content" id="nv2AnalysisContent"></div>
                 </div>
             </div>
 
@@ -172,8 +213,32 @@
             </div>
 
             <div class="action-buttons">
+                <button onclick="shareResult()" class="btn-primary">📤 Chia Sẻ Kết Quả</button>
                 <button onclick="printResult()" class="btn-primary">🖨️ In Kết Quả</button>
                 <button onclick="searchAgain()" class="btn-secondary">🔄 Tra Cứu Khác</button>
+            </div>
+
+            <!-- Share Modal -->
+            <div id="shareModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="modal-close" onclick="closeShareModal()">&times;</span>
+                    <h2>📤 Chia Sẻ Kết Quả</h2>
+                    <div class="share-content">
+                        <div class="qr-code-container">
+                            <canvas id="qrCodeCanvas"></canvas>
+                            <p>Quét mã QR để xem kết quả</p>
+                        </div>
+                        <div class="share-link">
+                            <input type="text" id="shareLink" readonly>
+                            <button onclick="copyShareLink()">📋 Sao Chép</button>
+                        </div>
+                        <div class="share-buttons">
+                            <button onclick="shareToFacebook()" class="share-btn facebook">Facebook</button>
+                            <button onclick="shareToZalo()" class="share-btn zalo">Zalo</button>
+                            <button onclick="downloadPDF()" class="share-btn pdf">Tải PDF</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -191,11 +256,12 @@
             <div id="suggestionList" class="suggestion-list"></div>
         </div>
     </div>
-
-    <!-- <script src="/assets/js/kq-data.js"></script> -->
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+        <!-- <script src="/assets/js/kq-data.js"></script> -->
     <script src="/assets/js/kq-data.min.js"></script>
-    <!-- <script src="/assets/js/kq-script.js"></script> -->
-    <script src="/assets/js/kq-script.min.js"></script>
+    <script src="/assets/js/kq-script.js"></script>
+    <!-- <script src="/assets/js/kq-script.min.js"></script> -->
 </body>
 
 </html>
