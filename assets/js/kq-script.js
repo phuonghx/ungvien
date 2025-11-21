@@ -7,7 +7,6 @@ let charts = {};
 function init() {
     if (typeof resultData !== 'undefined') {
         allResults = resultData;
-        console.log(`Đã tải ${allResults.length} kết quả thi`);
     }
     
     const searchInput = document.getElementById('searchInput');
@@ -722,15 +721,7 @@ function displayScoreComparison(candidate) {
             const percentile = ((positionScores.length - rank + 1) / positionScores.length * 100).toFixed(1);
             document.getElementById('yourPercentile').textContent = `Top ${percentile}% | Hạng ${rank}/${positionScores.length}`;
             
-            // Đánh giá
-            let assessment = '';
-            if (percentile >= 90) assessment = '🏆 Xuất sắc';
-            else if (percentile >= 75) assessment = '⭐ Rất tốt';
-            else if (percentile >= 50) assessment = '✅ Khá';
-            else if (percentile >= 25) assessment = '📊 Trung bình';
-            else assessment = '💪 Cần cố gắng';
-            
-            document.getElementById('yourPercentile').textContent += ` - ${assessment}`;
+            document.getElementById('yourPercentile').textContent += ``;
         }
     } else {
         document.getElementById('yourPercentile').textContent = 'Không có dữ liệu';
@@ -738,28 +729,12 @@ function displayScoreComparison(candidate) {
     
     // Các mốc khác
     document.getElementById('maxScore').textContent = maxScore.toFixed(2);
-    document.getElementById('maxScoreDetail').textContent = !isNaN(totalScore) 
-        ? `Bạn kém ${(maxScore - totalScore).toFixed(2)} điểm`
-        : '-';
     
     document.getElementById('avgScore').textContent = avgScore;
-    document.getElementById('avgScoreDetail').textContent = !isNaN(totalScore)
-        ? totalScore > avgScore 
-            ? `Bạn cao hơn ${(totalScore - avgScore).toFixed(2)} điểm` 
-            : `Bạn thấp hơn ${(avgScore - totalScore).toFixed(2)} điểm`
-        : '-';
     
     document.getElementById('medianScore').textContent = medianScore;
-    document.getElementById('medianScoreDetail').textContent = !isNaN(totalScore)
-        ? totalScore > medianScore 
-            ? `Bạn cao hơn ${(totalScore - medianScore).toFixed(2)} điểm` 
-            : `Bạn thấp hơn ${(medianScore - totalScore).toFixed(2)} điểm`
-        : '-';
     
     document.getElementById('minScore').textContent = minScore.toFixed(2);
-    document.getElementById('minScoreDetail').textContent = !isNaN(totalScore)
-        ? `Bạn cao hơn ${(totalScore - minScore).toFixed(2)} điểm`
-        : '-';
 }
 
 // Hiển thị phân tích nguyện vọng
